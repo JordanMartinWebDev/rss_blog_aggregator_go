@@ -63,10 +63,18 @@ func databaseFeedsToFeeds(feeds []database.Feed) []Feed {
 
 func databaseFeedFollowToFeedFollow(feed_follow database.FeedFollow) Feed_Follow {
 	return Feed_Follow{
-		ID:        feed_follow.FeedID,
+		ID:        feed_follow.ID,
 		CreatedAt: feed_follow.CreatedAt,
 		UpdatedAt: feed_follow.UpdatedAt,
 		UserID:    feed_follow.UserID,
 		FeedID:    feed_follow.FeedID,
 	}
+}
+
+func databaseFeedFollowsToFeedFollows(feedFollows []database.FeedFollow) []Feed_Follow {
+	result := make([]Feed_Follow, len(feedFollows))
+	for i, feed := range feedFollows {
+		result[i] = databaseFeedFollowToFeedFollow(feed)
+	}
+	return result
 }

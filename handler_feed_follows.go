@@ -9,6 +9,16 @@ import (
 	"github.com/jordanmatinwebdev/rss_blog_agregator_go/internal/database"
 )
 
+func (cfg *apiConfig) handlerGetFeedFollowsForUser(w http.ResponseWriter, r *http.Request, user database.User) {
+	feedFollows, err := cfg.DB.GetFeedFollowsForUser(r.Context(), user.ID)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Couldn't get feed follows")
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, databaseFeedFollowsToFeedFollows(feedFollows))
+}
+
 func (cfg *apiConfig) handlerCreateFeedFollows(w http.ResponseWriter, r *http.Request, user database.User) {
 	type parameters struct {
 		Feed_id uuid.UUID `json:"feed_id"`
