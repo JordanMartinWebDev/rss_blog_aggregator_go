@@ -6,23 +6,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jordanmatinwebdev/rss_blog_agregator_go/internal/auth"
 	"github.com/jordanmatinwebdev/rss_blog_agregator_go/internal/database"
 )
 
-func (cfg *apiConfig) handlerGetUserByAPIKey(w http.ResponseWriter, r *http.Request) {
-	key, err := auth.GetAPIKey(r.Header)
-	if err != nil {
-		respondWithError(w, http.StatusUnauthorized, "Unauthorized")
-		return
-	}
-
-	user, err := cfg.DB.GetUserByAPIKey(r.Context(), key)
-	if err != nil {
-		respondWithError(w, http.StatusNotFound, "Couldn't get user")
-		return
-	}
-
+func (cfg *apiConfig) handlerGetUserByAPIKey(w http.ResponseWriter, r *http.Request, user database.User) {
 	respondWithJSON(w, http.StatusOK, databaseUserToUser(user))
 }
 

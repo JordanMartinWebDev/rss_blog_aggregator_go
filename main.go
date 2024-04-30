@@ -32,10 +32,17 @@ func main() {
 		DB: dbQueries,
 	}
 
+	//Users
+	mux.HandleFunc("POST /v1/users", apiCfg.handlerCreateUsers)
+	mux.HandleFunc("GET /v1/users", apiCfg.middlewareAuth(apiCfg.handlerGetUserByAPIKey))
+
+	//Feeds
+	mux.HandleFunc("POST /v1/feeds", apiCfg.middlewareAuth(apiCfg.handlerCreateFeeds))
+	mux.HandleFunc("GET /v1/feeds", apiCfg.handlerGetAllFeeds)
+
+	//Ready
 	mux.HandleFunc("GET /v1/readiness", apiCfg.handlerReady)
 	mux.HandleFunc("GET /v1/err", apiCfg.handlerErr)
-	mux.HandleFunc("POST /v1/users", apiCfg.handlerCreateUsers)
-	mux.HandleFunc("GET /v1/users", apiCfg.handlerGetUserByAPIKey)
 
 	srv := &http.Server{
 		Addr:    ":" + port,
