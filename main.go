@@ -42,6 +42,7 @@ func main() {
 
 	//Feed Follows
 	mux.HandleFunc("POST /v1/feed_follows", apiCfg.middlewareAuth(apiCfg.handlerCreateFeedFollows))
+	mux.HandleFunc("DELETE /v1/feed_follows/{feedFollowID}", apiCfg.middlewareAuth(apiCfg.handlerDeleteFeedFollows))
 
 	//Ready
 	mux.HandleFunc("GET /v1/readiness", apiCfg.handlerReady)

@@ -36,3 +36,22 @@ func (cfg *apiConfig) handlerCreateFeedFollows(w http.ResponseWriter, r *http.Re
 
 	respondWithJSON(w, http.StatusOK, databaseFeedFollowToFeedFollow(feed_follow))
 }
+
+func (cfg *apiConfig) handlerDeleteFeedFollows(w http.ResponseWriter, r *http.Request, user database.User) {
+	feedFollowID, err := uuid.Parse(r.PathValue("feedFollowID"))
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Could not convert string id to int id")
+		return
+	}
+
+	err = cfg.DB.DeleteFeedFollow(r.Context(), database.DeleteFeedFollowParams{
+		ID:     feedFollowID,
+		UserID: user.ID,
+	})
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Couldn't delete feed follow")
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, map[string]string{"status": "ok"})
+}
