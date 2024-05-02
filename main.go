@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/jordanmatinwebdev/rss_blog_agregator_go/internal/database"
@@ -53,6 +54,10 @@ func main() {
 		Addr:    ":" + port,
 		Handler: corsMux,
 	}
+
+	const collectionConcurrency = 10
+	const collectionInterval = time.Minute
+	go startScraping(dbQueries, collectionConcurrency, collectionInterval)
 
 	log.Printf("Server running on port: %s", port)
 	log.Fatal(srv.ListenAndServe())
